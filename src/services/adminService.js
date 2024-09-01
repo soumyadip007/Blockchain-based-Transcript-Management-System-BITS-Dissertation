@@ -76,7 +76,7 @@ const generateTranscript = async (studentId, transcriptData) => {
   const transcript = new Transcript({
     student_id: studentId,
     details: transcriptData.details,
-    block_details: '', // Placeholder, to be filled by the blockchain service
+    block_details: transcriptData.block_details, 
   });
 
   await transcript.save();
@@ -95,6 +95,7 @@ const createShareableBlock = async (studentId, transcriptId) => {
   const blockDetails = `Blockchain details for student ${studentId}`;
 
   transcript.block_details = blockDetails;
+  
   await transcript.save();
 
   return { transcriptId, blockDetails };
