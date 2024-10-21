@@ -4,6 +4,7 @@ const Admin = require('../models/admin');
 const Student = require('../models/student');
 const Transcript = require('../models/transcript');
 const { JWT_SECRET } = require('../config/environment');
+const { deploy } = require('../blockchain/deploy');
 //const { sendEmail } = require('../utils/emailService');
 
 // Admin Login
@@ -76,10 +77,16 @@ const generateTranscript = async (studentId, transcriptData) => {
   const transcript = new Transcript({
     student_id: studentId,
     details: transcriptData.details,
-    block_details: transcriptData.block_details, 
+    block_details: transcriptData.block_details,
   });
 
-  await transcript.save();
+  try {
+    const hash = await deploy(['test']);
+   //await transcript.save();
+  } catch (error) {
+    throw new Error(error);
+  }
+
   return transcript;
 };
 
@@ -95,7 +102,7 @@ const createShareableBlock = async (studentId, transcriptId) => {
   const blockDetails = `Blockchain details for student ${studentId}`;
 
   transcript.block_details = blockDetails;
-  
+
   await transcript.save();
 
   return { transcriptId, blockDetails };
