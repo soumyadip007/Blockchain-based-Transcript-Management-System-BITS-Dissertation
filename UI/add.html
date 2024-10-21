@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0; /* Remove default margin */
+        }
+        .sidebar {
+            height: 100vh;
+            background: #343a40;
+            padding-top: 20px;
+            position: fixed;
+        }
+        .sidebar a {
+            color: white;
+        }
+        .sidebar a:hover {
+            background: #495057;
+            border-radius: 5px;
+        }
+        .navbar {
+            background: #007bff;
+            position: fixed; /* Make navbar fixed */
+            width: 100%; /* Full width */
+            z-index: 1000; /* Stay on top of content */
+        }
+        .content {
+            margin-left: 250px; /* Sidebar width */
+            padding-top: 70px; /* Space for navbar */
+            padding: 20px;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2, h3 {
+            color: #343a40;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand text-white" href="#">Student Management System</a>
+    </nav>
+<br><br>
+    <div class="sidebar flex-shrink-0 p-3">
+        <h4 class="text-white">Menu</h4>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link"  href="list.html">Student List</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="add.html">Add Transcript</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="blocklist.html">Blocklist</a>
+            </li>
+        </ul>
+    </div>
+    <div class="content flex-grow-1 p-4">
+        <h2>Dashboard</h2>
+        <div id="add-transcript" class="mt-4">
+            <div class="card p-3">
+                <h3>Manage Student & Transcript</h3>
+                <form id="studentForm">
+                    <div class="form-group">
+                        <label for="studentId">Student ID</label>
+                        <input type="text" class="form-control" id="studentId" placeholder="Enter student ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="studentName">Student Name</label>
+                        <input type="text" class="form-control" id="studentName" placeholder="Enter student name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Enter password">
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth</label>
+                        <input type="date" class="form-control" id="dob">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" class="form-control" id="address" placeholder="Enter address">
+                    </div>
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number</label>
+                        <input type="text" class="form-control" id="phoneNumber" placeholder="Enter phone number">
+                    </div>
+                    <div class="form-group">
+                        <label for="enrollmentYear">Enrollment Year</label>
+                        <input type="text" class="form-control" id="enrollmentYear" placeholder="Enter enrollment year">
+                    </div>
+                    <div id="semestersContainer">
+                        <h5>Semesters</h5>
+                        <div class="semester mb-3">
+                            <h6>Semester 1</h6>
+                            <div class="form-group">
+                                <label for="semesterNumber">Semester Number</label>
+                                <input type="text" class="form-control" value="1" disabled>
+                            </div>
+                            <div class="subjectsContainer">
+                                <div class="subject mb-2">
+                                    <input type="text" class="form-control" placeholder="Subject Name">
+                                    <input type="number" class="form-control mt-1" placeholder="Marks">
+                                    <input type="text" class="form-control mt-1" placeholder="Grade">
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-secondary addSubjectBtn">Add Subject</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary" id="addSemesterBtn">Add Semester</button>
+                    <button type="button" class="btn btn-primary" id="submitBtn">Submit</button>
+                </form>
+            </div>
+        </div>
+        <div id="blocklist" class="mt-4">
+            <div class="card p-3">
+                <h3>Blocklist</h3>
+                <p>List of blocked students.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let semesterCount = 1;
+
+            // Add Subject button functionality
+            $(document).on('click', '.addSubjectBtn', function() {
+                const subjectsContainer = $(this).siblings('.subjectsContainer');
+                subjectsContainer.append(`
+                    <div class="subject mb-2">
+                        <input type="text" class="form-control" placeholder="Subject Name">
+                        <input type="number" class="form-control mt-1" placeholder="Marks">
+                        <input type="text" class="form-control mt-1" placeholder="Grade">
+                    </div>
+                `);
+            });
+
+            // Add Semester button functionality
+            $('#addSemesterBtn').on('click', function() {
+                semesterCount++;
+                $('#semestersContainer').append(`
+                    <div class="semester mb-3">
+                        <h6>Semester ${semesterCount}</h6>
+                        <div class="form-group">
+                            <label for="semesterNumber">Semester Number</label>
+                            <input type="text" class="form-control" value="${semesterCount}" disabled>
+                        </div>
+                        <div class="subjectsContainer">
+                            <div class="subject mb-2">
+                                <input type="text" class="form-control" placeholder="Subject Name">
+                                <input type="number" class="form-control mt-1" placeholder="Marks">
+                                <input type="text" class="form-control mt-1" placeholder="Grade">
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary addSubjectBtn">Add Subject</button>
+                    </div>
+                `);
+            });
+
+            // Submit button functionality
+            $('#submitBtn').on('click', function() {
+                const studentData = {
+                    student_id: $('#studentId').val(),
+                    name: $('#studentName').val(),
+                    email: $('#email').val(),
+                    password: $('#password').val(),
+                    dob: $('#dob').val(),
+                    address: $('#address').val(),
+                    phone_number: $('#phoneNumber').val(),
+                    enrollment_year: $('#enrollmentYear').val(),
+                    semesters: []
+                };
+
+                $('.semester').each(function() {
+                    const semester = {
+                        semester_number: $(this).find('input[type="text"]').val(),
+                        subjects: []
+                    };
+                    $(this).find('.subject').each(function() {
+                        const subject = {
+                            subject_name: $(this).find('input').eq(0).val(),
+                            marks: $(this).find('input').eq(1).val(),
+                            grade: $(this).find('input').eq(2).val()
+                        };
+                        semester.subjects.push(subject);
+                    });
+                    studentData.semesters.push(semester);
+                });
+
+                // Send the data to the server
+                $.ajax({
+                    url: 'http://localhost:5000/api/admin/student', // Change this to your API endpoint
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(studentData),
+                    success: function(response) {
+                        alert('Student data submitted successfully!');
+                        // Optionally, reset the form here
+                        $('#studentForm')[0].reset();
+                        $('#semestersContainer').empty(); // Clear semesters
+                        semesterCount = 1; // Reset semester count
+                    },
+                    error: function(error) {
+                        console.error('Error submitting student data:', error);
+                        alert('Failed to submit student data.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

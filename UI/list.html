@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student List</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0; /* Remove default margin */
+        }
+        .sidebar {
+            height: 100vh;
+            background: #343a40;
+            padding-top: 20px;
+            position: fixed;
+        }
+        .sidebar a {
+            color: white;
+        }
+        .sidebar a:hover {
+            background: #495057;
+            border-radius: 5px;
+        }
+        .navbar {
+            background: #007bff;
+            position: fixed; /* Make navbar fixed */
+            width: 100%; /* Full width */
+            z-index: 1000; /* Stay on top of content */
+        }
+        .content {
+            margin-left: 250px; /* Sidebar width */
+            padding-top: 70px; /* Space for navbar */
+            padding: 20px;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand text-white" href="#">Student Management System</a>
+    </nav>
+    <br>    <br> 
+    <div class="sidebar flex-shrink-0 p-3">
+        <h4 class="text-white">Menu</h4>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" >Student List</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="add.html">Add Transcript</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="blocklist.html">Blocklist</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <h2 class="mt-4">Student List</h2>
+        <div id="student-list" class="mt-4">
+            <div class="card p-3" id="studentCard">
+                <h3>Students</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>DOB</th>
+                            <th>Enrollment Year</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody">
+                        <!-- Student data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Fetch student data from the server
+            $.ajax({
+                url: 'http://localhost:5000/api/admin/student',
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': '••••••' // Add your token here
+                },
+                success: function(data) {
+                    const students = data; // Assuming the response is an array of students
+                    const tableBody = $('#studentTableBody');
+
+                    // Populate table with student data
+                    students.forEach(student => {
+                        const row = `
+                            <tr>
+                                <td>${student.name}</td>
+                                <td>${student.email}</td>
+                                <td>${student.dob}</td>
+                                <td>${student.enrollment_year}</td>
+                            </tr>
+                        `;
+                        tableBody.append(row);
+                    });
+                },
+                error: function(error) {
+                    console.error('Error fetching student data:', error);
+                    alert('Failed to fetch student data.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
